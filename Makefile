@@ -3,6 +3,8 @@ OBJS = ${PROG:=.o} widget.o util.o config.o
 SRCS = ${OBJS:.o=.c}
 MANS = ${PROG:=.1}
 SCRIPT = xfilesctl
+DESKTOP = xfiles.desktop
+DESKTOPDIR = /usr/share/applications/
 
 PREFIX ?= /usr/local
 MANPREFIX ?= ${PREFIX}/share/man
@@ -37,6 +39,7 @@ install: all
 	install -d ${DESTDIR}${MANPREFIX}/man1
 	install -m 755 ${SCRIPT} ${DESTDIR}${PREFIX}/bin/${SCRIPT}
 	install -m 755 ${PROG} ${DESTDIR}${PREFIX}/bin/${PROG}
+	install -m 755 ${DESKTOP} ${DESKTOPDIR}/${DESKTOP}
 	install -m 644 ${MANS} ${DESTDIR}${MANPREFIX}/man1/${MANS}
 
 uninstall:

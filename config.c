@@ -49,7 +49,7 @@ static char *file_archive[]    = { "f", "*.zip", "*.tar", "*.gz", "*.rar", NULL 
 static char *file_audio[]      = { "f", "*.mp[23]", "*.ogg", "*.opus", "*.flac", NULL };
 static char *file_code[]       = { "f", "*.c", "*.h", "*.s", NULL };
 static char *file_core[]       = { "f", "*.core", NULL };
-static char *file_image[]      = { "f", "*.x[pb]m", "*.png", "*.jpg", "*.jpeg", "*.ppm", "*.gif", NULL };
+static char *file_image[]      = { "f", "*.x[pb]m", "*.png", "*.jpg", "*.jpeg", "*.ppm", "*.gif", "*.JPG","*.JPEG", NULL };
 static char *file_svg[]        = { "f", "*.svg", NULL };
 static char *file_readme[]     = { "f", "README", "README.md", NULL };
 static char *file_makefile[]   = { "f", "[Mm]akefile", NULL };
@@ -57,6 +57,7 @@ static char *file_pdf[]        = { "f", "*.pdf", NULL };
 static char *file_text[]       = { "f", "*.epub", "*.txt", "*.ps", "*.eps", "*.djvu", NULL };
 static char *file_cr3[]       = { "f", "*.cr3", "*.CR3", NULL };
 static char *file_cr2[]       = { "f", "*.cr2", "*.CR2", NULL };
+static char *file_orf[]       = { "f", "*.ORF", NULL };
 static char *file_video[]      = { "f", "*.mp4", "*.webm", "*.mkv", "*.mov", "*.ogv", NULL };
 static char *folder_bin[]      = { "d", "~/usr", "~/bin", NULL };
 static char *folder_code[]     = { "d", "~/prj", "~/proj", "~/code", "~/[Pp]rojects", NULL };
@@ -139,13 +140,18 @@ static char *pdftoppm[NCMDARGS] = {
 
 static char *cr3toppm[NCMDARGS] = {
 	"/bin/sh", "-c",
-	"exiftool -b -JpgFromRaw -ext CR3 \"${1}\" " \
+	"exiftool -b -ThumbnailImage -ext CR3 \"${1}\" " \
 	"| convert - -define filename:literal=true -resize "THUMBSIZE"x"THUMBSIZE"  -gravity Center -crop "THUMBSIZE"x"THUMBSIZE" -format ppm \"${2}\"",
 };
 
 static char *cr2toppm[NCMDARGS] = {
 	"/bin/sh", "-c",
-	"exiftool -b -JpgFromRaw -ext CR2 \"${1}\" -o -" \
+	"exiftool -b -ThumbnailImage -ext CR2 \"${1}\" " \
+	"| convert - -define filename:literal=true -resize "THUMBSIZE"x"THUMBSIZE"  -gravity Center -crop "THUMBSIZE"x"THUMBSIZE" -format ppm \"${2}\"",
+};
+static char *orftoppm[NCMDARGS] = {
+	"/bin/sh", "-c",
+	"exiftool -b -ThumbnailImage -ext ORF \"${1}\" " \
 	"| convert - -define filename:literal=true -resize "THUMBSIZE"x"THUMBSIZE"  -gravity Center -crop "THUMBSIZE"x"THUMBSIZE" -format ppm \"${2}\"",
 };
 /*
@@ -161,5 +167,6 @@ char **thumbs[][2] = {
 	{ file_pdf,        pdftoppm,    },
 	{ file_cr3,        cr3toppm,    },
 	{ file_cr2,        cr2toppm,    },
+	{ file_orf,        orftoppm,    },
 	{ NULL,            NULL, },
 };

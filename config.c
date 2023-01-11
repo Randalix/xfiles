@@ -56,6 +56,7 @@ static char *file_makefile[]   = { "f", "[Mm]akefile", NULL };
 static char *file_pdf[]        = { "f", "*.pdf", NULL };
 static char *file_text[]       = { "f", "*.epub", "*.txt", "*.ps", "*.eps", "*.djvu", NULL };
 static char *file_cr3[]       = { "f", "*.cr3", "*.CR3", NULL };
+static char *file_cr2[]       = { "f", "*.cr2", "*.CR2", NULL };
 static char *file_video[]      = { "f", "*.mp4", "*.webm", "*.mkv", "*.mov", "*.ogv", NULL };
 static char *folder_bin[]      = { "d", "~/usr", "~/bin", NULL };
 static char *folder_code[]     = { "d", "~/prj", "~/proj", "~/code", "~/[Pp]rojects", NULL };
@@ -138,8 +139,14 @@ static char *pdftoppm[NCMDARGS] = {
 
 static char *cr3toppm[NCMDARGS] = {
 	"/bin/sh", "-c",
-	"exiftool \"{1}\" -b -JpgFromRaw -w _CR3.JPG -ext CR3 -r  -o - " \
-	"| convert - -define filename:literal=true -format ppm \"${2}\""
+	"exiftool -b -JpgFromRaw -ext CR3 \"${1}\" " \
+	"| convert - -define filename:literal=true -resize "THUMBSIZE"x"THUMBSIZE"  -gravity Center -crop "THUMBSIZE"x"THUMBSIZE" -format ppm \"${2}\"",
+};
+
+static char *cr2toppm[NCMDARGS] = {
+	"/bin/sh", "-c",
+	"exiftool -b -JpgFromRaw -ext CR2 \"${1}\" -o -" \
+	"| convert - -define filename:literal=true -resize "THUMBSIZE"x"THUMBSIZE"  -gravity Center -crop "THUMBSIZE"x"THUMBSIZE" -format ppm \"${2}\"",
 };
 /*
  * The following table links file patterns with commands to be run to
@@ -153,5 +160,6 @@ char **thumbs[][2] = {
 	{ file_svg,        rsvgconvert, },
 	{ file_pdf,        pdftoppm,    },
 	{ file_cr3,        cr3toppm,    },
+	{ file_cr2,        cr2toppm,    },
 	{ NULL,            NULL, },
 };

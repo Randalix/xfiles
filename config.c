@@ -55,6 +55,7 @@ static char *file_readme[]     = { "f", "README", "README.md", NULL };
 static char *file_makefile[]   = { "f", "[Mm]akefile", NULL };
 static char *file_pdf[]        = { "f", "*.pdf", NULL };
 static char *file_text[]       = { "f", "*.epub", "*.txt", "*.ps", "*.eps", "*.djvu", NULL };
+static char *file_cr3[]       = { "f", "*.cr3", "*.CR3", NULL };
 static char *file_video[]      = { "f", "*.mp4", "*.webm", "*.mkv", "*.mov", "*.ogv", NULL };
 static char *folder_bin[]      = { "d", "~/usr", "~/bin", NULL };
 static char *folder_code[]     = { "d", "~/prj", "~/proj", "~/code", "~/[Pp]rojects", NULL };
@@ -135,6 +136,11 @@ static char *pdftoppm[NCMDARGS] = {
 	"-singlefile \"${1}\" \"${2%.ppm}\"",
 };
 
+static char *cr3toppm[NCMDARGS] = {
+	"/bin/sh", "-c",
+	"exiftool \"{1}\" -b -JpgFromRaw -w _CR3.JPG -ext CR3 -r  -o - " \
+	"| convert - -define filename:literal=true -format ppm \"${2}\""
+};
 /*
  * The following table links file patterns with commands to be run to
  * generate thumbnails.
@@ -146,5 +152,6 @@ char **thumbs[][2] = {
 	{ file_image,      imagemagick, },
 	{ file_svg,        rsvgconvert, },
 	{ file_pdf,        pdftoppm,    },
+	{ file_cr3,        cr3toppm,    },
 	{ NULL,            NULL, },
 };
